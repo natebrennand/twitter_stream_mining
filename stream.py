@@ -8,13 +8,17 @@ import string
 class StdOutListener( tweepy.streaming.StreamListener):
 	def on_data(self, data):
 		tweet = json.loads(data)
-		if str('#'+hashtag_query) in tweet['text'].lower():
+		if hashtag_query in hashtag_tweet(tweet):
 			if output_url:
 				print url_tweet(tweet)
-			if output_tweet:
-				print prettify_tweet(tweet)
+			if output_user:
+				print user_tweet(tweet)
+			if output_message:
+				print message_tweet(tweet)
 			if output_time:
 				print time_tweet(tweet)
+			if output_hashtag:
+				print hashtag_tweet(tweet)
 		return True
 	
 def url_tweet(tweet):
@@ -25,11 +29,20 @@ def url_tweet(tweet):
 def strip_non_ascii(text):
 	return filter(lambda x: x in string.printable, text)
 
-def prettify_tweet(tweet):
+def hashtag_tweet(tweet):
+	hashtags = tweet['entities']['hashtags']
+	tag_list = []
+	for tag in hashtags:
+		tag_list.append( str(tag[u'text']).lower() )
+	return tag_list
+
+def user_tweet(tweet):
 	user = str(tweet['user']['screen_name'])
-	text = strip_non_ascii(tweet['text'])
-	pretty = str(user + '\t tweeted\n\t' + text)
-	return pretty
+	return user
+
+def message_tweet(tweet):
+	text = str(strip_non_ascii(tweet['text']))
+	return text
 
 def time_tweet(tweet):
 	time = tweet['created_at']
@@ -41,14 +54,17 @@ if __name__ == '__main__':
 						credentials.consumer_secret)
 	auth.set_access_token(credentials.access_token,
 						credentials.access_token_secret)
-
 	stream = Stream(auth, listener)	
 
 	hashtag_query = str(raw_input('Enter the hashtag you would like to search for: ')).lower()
 	
-	output_choice = str(raw_input('Output options, enter all that you would like to view\ntweet\nurl\ntime\n')).lower()
-	output_tweet = False
-	if 'tweet' in output_choice:
+	output_choice = str(raw_input('Output options, enter all that you '
+		+'would like to view\nuser\tmessage\turl\ttime\thashtag\n')).lower()
+	output_message = False
+	if 'message' in output_choice:
+		output_message = True
+	output_user = False
+	if 'user' in output_choice:
 		output_tweet = True
 	output_url = False
 	if 'url' in output_choice:
@@ -56,8 +72,11 @@ if __name__ == '__main__':
 	output_time = False
 	if 'time' in output_choice:
 		output_time = True
+	output_hashtag = False
+	if 'hashtag' in output_choice:
+		output_hashtag = True
 
-	if not output_time or output_url or output_tweet:
+	if not output_time or output_url or output_message or output_user or output_hashtag:
 		output_tweet = True
 
 	stream.filter(track=[str('#'+hashtag_query)])
