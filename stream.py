@@ -3,43 +3,62 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 import credentials
 import json
+import string
 
 class StdOutListener( tweepy.streaming.StreamListener):
-
 	def on_data(self, data):
-
 		tweet = json.loads(data)
-		if str('#'+hashtag_query) in tweet['text']:
-			print url_tweet(tweet)
+		if str('#'+hashtag_query) in tweet['text'].lower():
+			if output_url:
+				print url_tweet(tweet)
+			if output_tweet:
+				print prettify_tweet(tweet)
+			if output_time:
+				print time_tweet(tweet)
 		return True
-
-	def on_error(self, status):
-		print status
-
-def prettify_tweet(tweet):
-	user = str(tweet['user']['screen_name'])
-	text = str(tweet['text'])
-	pretty = str(user + '\t tweeted\n\t' + text)
-	return pretty
-
+	
 def url_tweet(tweet):
 	user = str(tweet['user']['screen_name'])
 	tweet_id = str(tweet['id'])
 	return str('https://twitter.com/'+user+'/status/'+tweet_id)
 
+def strip_non_ascii(text):
+	return filter(lambda x: x in string.printable, text)
+
+def prettify_tweet(tweet):
+	user = str(tweet['user']['screen_name'])
+	text = strip_non_ascii(tweet['text'])
+	pretty = str(user + '\t tweeted\n\t' + text)
+	return pretty
+
+def time_tweet(tweet):
+	time = tweet['created_at']
+	return time
+
 if __name__ == '__main__':
+	listener = StdOutListener()
+	auth = OAuthHandler(credentials.consumer_key, 
+						credentials.consumer_secret)
+	auth.set_access_token(credentials.access_token,
+						credentials.access_token_secret)
 
-	consumer_key = credentials.consumer_key
-	consumer_secret = credentials.consumer_secret
-	access_token = credentials.access_token
-	access_token_secret = credentials.access_token_secret
+	stream = Stream(auth, listener)	
 
-	l = StdOutListener()
-	auth = OAuthHandler(consumer_key, consumer_secret)
-	auth.set_access_token(access_token, access_token_secret)
+	hashtag_query = str(raw_input('Enter the hashtag you would like to search for: ')).lower()
+	
+	output_choice = str(raw_input('Output options, enter all that you would like to view\ntweet\nurl\ntime\n')).lower()
+	output_tweet = False
+	if 'tweet' in output_choice:
+		output_tweet = True
+	output_url = False
+	if 'url' in output_choice:
+		output_url = True
+	output_time = False
+	if 'time' in output_choice:
+		output_time = True
 
-	stream = Stream(auth, l)	
+	if not output_time or output_url or output_tweet:
+		output_tweet = True
 
-	hashtag_query = str(raw_input('Enter the hashtag you would like to search for: '))
-	stream.filter(track=[hashtag_query])
+	stream.filter(track=[str('#'+hashtag_query)])
 
