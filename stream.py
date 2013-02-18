@@ -88,9 +88,10 @@ if __name__ == '__main__':
 	if not output_time or output_url or output_message or output_user or output_hashtag:
 		output_tweet = True
 
-	log_file = open(str(hashtag_query+"_log.txt"),'w+')
+	start_time = ctime()
+	log_file = open(str(hashtag_query+"_log+"+start_time+".txt"),'w+')
 	log_file.write('Log file of tweets containing the hashtag '+hashtag_query
-			+'.\n\tLog began at '+ctime()+'\n\n')
+			+'.\n\tLog began at '+start_time+'\n\n')
 	atexit.register( clean_up,log_file)
 
 	stream.filter(track=[str('#'+hashtag_query)])
