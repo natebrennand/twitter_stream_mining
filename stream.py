@@ -4,21 +4,26 @@ from tweepy import Stream
 import credentials
 import json
 import string
+import atexit
+from time import ctime
 
 class StdOutListener( tweepy.streaming.StreamListener):
 	def on_data(self, data):
 		tweet = json.loads(data)
 		if hashtag_query in hashtag_tweet(tweet):
+			output = ""
 			if output_url:
-				print url_tweet(tweet)
+				output += url_tweet(tweet) + '\n'
 			if output_user:
-				print user_tweet(tweet)
+				output += user_tweet(tweet) + '\n'
 			if output_message:
-				print message_tweet(tweet)
+				output += message_tweet(tweet) + '\n'
 			if output_time:
-				print time_tweet(tweet)
+				output += time_tweet(tweet) + '\n'
 			if output_hashtag:
-				print hashtag_tweet(tweet)
+				output += hashtag_tweet(tweet) + '\n'
+			print output,
+			log_file.write(output)
 		return True
 	
 def url_tweet(tweet):
@@ -47,6 +52,10 @@ def message_tweet(tweet):
 def time_tweet(tweet):
 	time = tweet['created_at']
 	return time
+
+def clean_up(log):
+	log.write('\n\tLog closed at '+ctime())
+	log.close()
 
 if __name__ == '__main__':
 	listener = StdOutListener()
@@ -79,5 +88,13 @@ if __name__ == '__main__':
 	if not output_time or output_url or output_message or output_user or output_hashtag:
 		output_tweet = True
 
+	log_file = open(str(hashtag_query+"_log.txt"),'w+')
+	log_file.write('Log file of tweets containing the hashtag '+hashtag_query
+			+'.\n\tLog began at '+ctime()+'\n\n')
+	atexit.register( clean_up,log_file)
+
 	stream.filter(track=[str('#'+hashtag_query)])
+
+
+
 
