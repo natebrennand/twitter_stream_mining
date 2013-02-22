@@ -6,6 +6,7 @@ import json
 import string
 import atexit
 from time import ctime
+from sys import argv
 
 class StdOutListener( tweepy.streaming.StreamListener):
 	def on_data(self, data):
@@ -31,22 +32,25 @@ def url_tweet(tweet):
 	tweet_id = str(tweet['id'])
 	return str('https://twitter.com/'+user+'/status/'+tweet_id)
 
+# lower case and strips non ascii characters
 def strip_non_ascii(text):
-	return filter(lambda x: x in string.printable, text)
+	text = filter(lambda x: x in string.printable, text)
+	text = str(text)
+	return text
 
 def hashtag_tweet(tweet):
 	hashtags = tweet['entities']['hashtags']
 	tag_list = []
 	for tag in hashtags:
-		tag_list.append( str(tag[u'text']).lower() )
+		tag_list.append( strip_non_ascii(tag[u'text']).lower() )
 	return tag_list
 
 def user_tweet(tweet):
-	user = str(tweet['user']['screen_name'])
+	user = strip_non_ascii(tweet['user']['screen_name'])
 	return user
 
 def message_tweet(tweet):
-	text = str(strip_non_ascii(tweet['text']))
+	text = strip_non_ascii(tweet['text'])
 	return text
 
 def time_tweet(tweet):
@@ -65,10 +69,15 @@ if __name__ == '__main__':
 						credentials.access_token_secret)
 	stream = Stream(auth, listener)	
 
-	hashtag_query = str(raw_input('Enter the hashtag you would like to search for: ')).lower()
+	if len(argv) == 3:
+		hashtag_query = str(argv[1])
+		output_choice = str(argv[2])
+	else:
+		hashtag_query = str(raw_input('Enter the hashtag you would like to search for: ')).lower()
 	
-	output_choice = str(raw_input('Output options, enter all that you '
-		+'would like to view\nuser\tmessage\turl\ttime\thashtag\n')).lower()
+		output_choice = str(raw_input('Output options, enter all that you '
+			+'would like to view\nuser\tmessage\turl\ttime\thashtag\n')).lower()
+	
 	output_message = False
 	if 'message' in output_choice:
 		output_message = True
