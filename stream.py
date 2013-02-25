@@ -83,7 +83,7 @@ if __name__ == '__main__':
 		output_message = True
 	output_user = False
 	if 'user' in output_choice:
-		output_tweet = True
+		output_user = True
 	output_url = False
 	if 'url' in output_choice:
 		output_url = True
