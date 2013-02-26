@@ -2,64 +2,52 @@ import tweepy.streaming
 from tweepy import OAuthHandler
 from tweepy import Stream
 import credentials
-import json
-import string
 import atexit
+import py_tweet
 from time import ctime
-from sys import argv
+
 
 class StdOutListener( tweepy.streaming.StreamListener):
 	def on_data(self, data):
-		tweet = json.loads(data)
-		if hashtag_query in hashtag_tweet(tweet):
-			output = ""
-			if output_url:
-				output += url_tweet(tweet) + '\n'
-			if output_user:
-				output += user_tweet(tweet) + '\n'
-			if output_message:
-				output += message_tweet(tweet) + '\n'
-			if output_time:
-				output += time_tweet(tweet) + '\n'
-			if output_hashtag:
-				output += hashtag_tweet(tweet) + '\n'
-			print output,
-			log_file.write(output)
+		tweet_match = py_tweet.tweet(data)
+
+		output = ''
+		for i in range(len(output_choices)):
+			if output_choices[i]:
+				output += getattr(tweet_match,output_options[i])+'\n'
+		log_file.write(output + '\n')
+		print output
+
 		return True
-	
-def url_tweet(tweet):
-	user = str(tweet['user']['screen_name'])
-	tweet_id = str(tweet['id'])
-	return str('https://twitter.com/'+user+'/status/'+tweet_id)
 
-# lower case and strips non ascii characters
-def strip_non_ascii(text):
-	text = filter(lambda x: x in string.printable, text)
-	text = str(text)
-	return text
-
-def hashtag_tweet(tweet):
-	hashtags = tweet['entities']['hashtags']
-	tag_list = []
-	for tag in hashtags:
-		tag_list.append( strip_non_ascii(tag[u'text']).lower() )
-	return tag_list
-
-def user_tweet(tweet):
-	user = strip_non_ascii(tweet['user']['screen_name'])
-	return user
-
-def message_tweet(tweet):
-	text = strip_non_ascii(tweet['text'])
-	return text
-
-def time_tweet(tweet):
-	time = tweet['created_at']
-	return time
+def start_record():
+	start_time = ctime()
+	log_file = open(str("logs/"+hashtag_query+"_log+"+start_time+".txt"),'w+')
+	log_file.write('Log file of tweets containing the hashtag '+hashtag_query
+			+'.\n\tLog began at '+start_time+'\n\n')
+	atexit.register( clean_up,log_file)
+	return log_file
 
 def clean_up(log):
 	log.write('\n\tLog closed at '+ctime())
 	log.close()
+
+def choose_outputs(output_options):
+	output_choices = []
+
+	print "Enter Y for yes or N for no if for all of the following output options."
+	for choice in output_options:
+		choice = str( raw_input(choice+'\t')).upper()
+		if 'Y' in choice:
+			output_choices.append(True)
+		else:
+			output_choices.append(False)
+	# Outputs URL by default if no options are chosen.
+	if False not in output_choices:
+		output_choices[2] = True
+	# Return array of boolean choices
+	return output_choices
+
 
 if __name__ == '__main__':
 	listener = StdOutListener()
@@ -69,39 +57,12 @@ if __name__ == '__main__':
 						credentials.access_token_secret)
 	stream = Stream(auth, listener)	
 
-	if len(argv) == 3:
-		hashtag_query = str(argv[1])
-		output_choice = str(argv[2])
-	else:
-		hashtag_query = str(raw_input('Enter the hashtag you would like to search for: ')).lower()
-	
-		output_choice = str(raw_input('Output options, enter all that you '
-			+'would like to view\nuser\tmessage\turl\ttime\thashtag\n')).lower()
-	
-	output_message = False
-	if 'message' in output_choice:
-		output_message = True
-	output_user = False
-	if 'user' in output_choice:
-		output_user = True
-	output_url = False
-	if 'url' in output_choice:
-		output_url = True
-	output_time = False
-	if 'time' in output_choice:
-		output_time = True
-	output_hashtag = False
-	if 'hashtag' in output_choice:
-		output_hashtag = True
+	hashtag_query = str(raw_input('Enter the hashtag you would like to search for: ')).lower()
 
-	if not output_time or output_url or output_message or output_user or output_hashtag:
-		output_tweet = True
+	output_options = ['user','message','url','time','hashtags']
+	output_choices = choose_outputs(output_options)
 
-	start_time = ctime()
-	log_file = open(str(hashtag_query+"_log+"+start_time+".txt"),'w+')
-	log_file.write('Log file of tweets containing the hashtag '+hashtag_query
-			+'.\n\tLog began at '+start_time+'\n\n')
-	atexit.register( clean_up,log_file)
+	log_file = start_record()
 
 	stream.filter(track=[str('#'+hashtag_query)])
 
