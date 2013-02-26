@@ -18,10 +18,11 @@ goals
 =====================
 
 - [x] multiple hashtag searches
-- [] seach by geographic area
-- [] search for all tweets mentioning a user(s)
-- [] add qualifiers like follower count or total tweet count
-- [] GUI
+- [ ] seach by geographic area
+- [ ] search for all tweets mentioning a user(s)
+- [ ] add qualifiers like follower count or total tweet count
+- [ ] populate database as opposed to writing to text file
+- [ ] GUI
 
 
 
