@@ -1,4 +1,4 @@
-twitter_stream_mining
+Twitter Stream Mining
 =====================
 
 Filters the live stream of tweets. Input the hashtag(s) you're interested in and see what the world is saying with them.
@@ -12,9 +12,6 @@ All matched tweets will be saved into a text file.
 	Access Token Secret : access_token_secret
 	Consumer Key : consumer_key
 	Consumer Secret : consumer_secret
-
-	The credentials file must include your access token, access token secret, consumer key and consumer secret.
-	Variables should be 
 
 
 goals
