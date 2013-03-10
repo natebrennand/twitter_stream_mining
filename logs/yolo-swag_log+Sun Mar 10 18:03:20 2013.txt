@@ -1,0 +1,33 @@
+Log file of tweets containing the hashtag yolo-swag.
+	Log began at Sun Mar 10 18:03:20 2013
+
+Sun Mar 10 22:03:21 +0000 2013
+
+Sun Mar 10 22:03:25 +0000 2013
+
+Sun Mar 10 22:03:25 +0000 2013
+
+Sun Mar 10 22:03:25 +0000 2013
+
+Sun Mar 10 22:03:27 +0000 2013
+
+Sun Mar 10 22:03:27 +0000 2013
+
+Sun Mar 10 22:03:28 +0000 2013
+
+Sun Mar 10 22:03:29 +0000 2013
+
+Sun Mar 10 22:03:30 +0000 2013
+
+Sun Mar 10 22:03:31 +0000 2013
+
+Sun Mar 10 22:03:31 +0000 2013
+
+Sun Mar 10 22:03:32 +0000 2013
+
+Sun Mar 10 22:03:32 +0000 2013
+
+Sun Mar 10 22:03:33 +0000 2013
+
+
+	Log closed at Sun Mar 10 18:03:35 2013
