@@ -9,7 +9,6 @@ def strip_non_ascii(text):
 	return text
 
 class tweet(object):
-	
 	def __init__(self, tweet_data):
 		json_tweet = json.loads(tweet_data)
 		self.message = strip_non_ascii(json_tweet['text'])
