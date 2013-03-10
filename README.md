@@ -6,13 +6,23 @@ Filters the live stream of tweets. Input the hashtag(s) you're interested in and
 All matched tweets will be saved into a text file.
 
 
-	Install tweepy and run with a credentials.py file in your directory.
+
+
 	The Twitter credentials file should contain these variables, named as such.
 	Access Token : access_token
 	Access Token Secret : access_token_secret
 	Consumer Key : consumer_key
 	Consumer Secret : consumer_secret
 
+
+To Run
+=====================
+
+	// While in the directory
+	virtualenv --no-site-packages .
+	pip install -r requirements.txt
+	python stream.py
+	
 
 goals
 =====================

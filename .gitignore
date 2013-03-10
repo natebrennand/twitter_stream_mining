@@ -1,4 +1,8 @@
 
 *.pyc
 credentials.py
+.Python
+include/
+lib/
+bin/
 
