@@ -6,18 +6,10 @@ Filters the live stream of tweets. Input the hashtag(s) you're interested in and
 All matched tweets will be saved into a text file.
 
 
-
-
-	The Twitter credentials file should contain these variables, named as such.
-	Access Token : access_token
-	Access Token Secret : access_token_secret
-	Consumer Key : consumer_key
-	Consumer Secret : consumer_secret
-
-
 To Run
 =====================
 
+	// Fill out the credentials_template.py with your credentials and rename "credentials.py"
 	// While in the directory
 	virtualenv --no-site-packages .
 	pip install -r requirements.txt
