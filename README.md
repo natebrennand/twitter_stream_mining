@@ -16,7 +16,7 @@ To Run
 	python stream.py
 	
 
-goals
+Goals
 =====================
 
 - [x] multiple hashtag searches
