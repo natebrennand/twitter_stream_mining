@@ -6,4 +6,4 @@ include/
 lib/
 bin/
 build/
-
+logs/
