@@ -9,8 +9,8 @@ All matched tweets will be saved into a text file.
 To Run
 =====================
 
-	// Fill out the credentials_template.py with your credentials and rename "credentials.py"
-	// While in the directory
+	// Fill out the credentials.py with your credentials
+	// While in the directory:
 	virtualenv --no-site-packages .
 	pip install -r requirements.txt
 	python stream.py
