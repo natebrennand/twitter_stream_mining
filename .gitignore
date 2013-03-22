@@ -5,4 +5,5 @@ credentials.py
 include/
 lib/
 bin/
+build/
 

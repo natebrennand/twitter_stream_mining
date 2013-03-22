@@ -1,20 +1,21 @@
 import string
 import json
 
-
 # strips non ascii characters
 def strip_non_ascii(text):
 	text = filter(lambda x: x in string.printable, text)
 	text = str(text)
 	return text
 
+
 # object for every tweet
 class tweet(object):
+
 	def __init__(self, tweet_data):
 		json_tweet = json.loads(tweet_data)
 		self.message = strip_non_ascii(json_tweet['text'])
 		self.user = strip_non_ascii(json_tweet['user']['screen_name'])
-		self.time = json_tweet['created_at']
+		self.time = json_tweet['created_at'].encode('ascii','ignore')
 		
 		self.hashtag_list = []
 		for tag in json_tweet['entities']['hashtags']:
@@ -23,6 +24,9 @@ class tweet(object):
 
 		tweet_id = str(json_tweet['id'])	#Unique
 		self.url = str('https://twitter.com/'+self.user+'/status/'+tweet_id)
+
+	def get_tuple(self):
+		return ( self.url, self.user, self.message, self.hashtags, self.time )
 
 	def to_string(self):
 		pretty = self.message+'\n'
@@ -35,8 +39,7 @@ class tweet(object):
 		return pretty
 
 	def hashtag_string(self):
-		tag_string = "Hashtags: "
-		
+		tag_string = ''
 		if not self.hashtag_list:
 			tag_string += "none"
 		else:
