@@ -18,9 +18,9 @@ class StdOutListener( tweepy.streaming.StreamListener):
 
 			sql_insert = """
 			INSERT or IGNORE
-			INTO {} VALUES {};
-			""".format( db_name, tweet_match.get_tuple() )
-			db.cursor().execute( sql_insert )
+			INTO {} VALUES (?,?,?,?,?);
+			""".format( db_name )
+			db.cursor().execute( sql_insert , tweet_match.get_tuple() )
 			db.commit()
 
 		return True
