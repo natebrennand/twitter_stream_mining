@@ -21,7 +21,7 @@ class StdOutListener( tweepy.streaming.StreamListener):
 			INTO {} VALUES {};
 			""".format( db_name, tweet_match.get_tuple() )
 			print sql_insert
-			db = sqlite3.connect( 'logs/data.db' )
+			#db = sqlite3.connect( 'logs/data.db' )
 			db.cursor().execute( sql_insert )
 			db.commit()
 
@@ -52,11 +52,13 @@ def start_record(db_name):
 		PRIMARY KEY (url)
 	);
 	""".format(db_name)
+	print sql_init
 	db = sqlite3.connect( 'logs/data.db' )
 	atexit.register( clean_up, db )
 
 	cursor = db.cursor()
 	cursor.execute( sql_init )
+	return db
 
 
 # Closes database at the end of logging
@@ -96,7 +98,7 @@ if __name__ == '__main__':
 	hashtag_queries = query.split(' ')
 
 	search_type = str(
-		raw_input('Should returned tweets include all or 1< hashtags? Enter '+
+		raw_input('Should returned tweets include all or >=1 hashtags? Enter '+
 		'"all" or "one"')).lower()
 
 	if 'all' in search_type:
@@ -107,8 +109,8 @@ if __name__ == '__main__':
 	db_name = ''
 	for tag in hashtag_queries:
 		db_name += tag + '_'
-	db_name
-	start_record(db_name)
+	print db_name
+	db = start_record(db_name)
 
 	stream.filter( track = hashtag_queries )
 
