@@ -20,8 +20,6 @@ class StdOutListener( tweepy.streaming.StreamListener):
 			INSERT or IGNORE
 			INTO {} VALUES {};
 			""".format( db_name, tweet_match.get_tuple() )
-			print sql_insert
-			#db = sqlite3.connect( 'logs/data.db' )
 			db.cursor().execute( sql_insert )
 			db.commit()
 
@@ -52,7 +50,6 @@ def start_record(db_name):
 		PRIMARY KEY (url)
 	);
 	""".format(db_name)
-	print sql_init
 	db = sqlite3.connect( 'logs/data.db' )
 	atexit.register( clean_up, db )
 
