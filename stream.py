@@ -55,29 +55,9 @@ def start_record(db_name):
 	cursor.execute( sql_init )
 	return db
 
-
 # Closes database at the end of logging
 def clean_up( db ):
 	db.close()
-
-# POSSIBLLY NEEDS TO BE ALTERED FOR VIEWING OF TWEETS AFTER LOGGING
-def choose_outputs():
-	output_options = ['user','message','url','time','hashtags']
-	output_choices = []
-
-	print "Enter Y or N for all of the following output options."
-	for choice in output_options:
-		choice = str( raw_input(choice.ljust(12))).upper()
-		if 'Y' in choice:
-			output_choices.append(True)
-		else:
-			output_choices.append(False	)
-
-	# Outputs URL by default if no options are chosen.	
-	if False not in output_choices:
-		output_choices[2] = True
-	# Return array of boolean choices
-	return output_choices
 
 
 if __name__ == '__main__':
