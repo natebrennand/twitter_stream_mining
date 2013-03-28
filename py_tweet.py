@@ -13,10 +13,16 @@ def reverse_geoencode(latitude,longitude):
 	payload = {'lat':latitude,'lng':longitude,'username':username}
 	r = requests.get('http://api.geonames.org/countrySubdivisionJSON',params=payload)
 	data = json.loads(r.text)
-	country = data[u'countryName'].encode('ascii','ignore')
-	state = data[u'adminName1'].encode('ascii','ignore')
-	state_initial = data[u'adminCode1'].encode('ascii','ignore')
-	return country,state,state_initial
+	
+	print json.dumps(data, sort_keys=True,indent=4, separators=(',',': '))
+
+	columns = {u'countryName':None,u'adminCode1':None,u'adminName1':None}
+	for key in columns:
+		if not data.get(key) is None:
+			print key
+			columns[key] = data[key].encode('ascii','ignore')
+
+	return columns.values()
 
 
 # object for every tweet
@@ -33,6 +39,9 @@ class tweet(object):
 			self.hashtag_list.append( strip_non_ascii(tag[u'text']).lower() )
 		self.hashtags = self.hashtag_string()
 
+		tweet_id = str(json_tweet['id'])	#Unique
+		self.url = str('https://twitter.com/'+self.user+'/status/'+tweet_id)
+
 		if json_tweet['coordinates'] is None:
 			self.longitude = None
 			self.latitude = None
@@ -42,11 +51,10 @@ class tweet(object):
 		else:
 			self.longitude = json_tweet['coordinates']['coordinates'][0]
 			self.latitude = json_tweet['coordinates']['coordinates'][1]
-			self.country,self.state,self.state_initial = reverse_geoencode(
-				self.longitude,self.latitude)
+			self.country,self.state_initial,self.state = reverse_geoencode(
+				self.latitude,self.longitude)
+			print self.get_tuple()
 
-		tweet_id = str(json_tweet['id'])	#Unique
-		self.url = str('https://twitter.com/'+self.user+'/status/'+tweet_id)
 
 	def get_tuple(self):
 		return ( self.url, self.user, self.message, self.hashtags, self.time,

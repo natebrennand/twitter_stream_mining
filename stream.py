@@ -13,7 +13,6 @@ class StdOutListener( tweepy.streaming.StreamListener):
 
 		if hashtag_filter(tweet_match.hashtag_list):
 			print getattr(tweet_match,'time')
-
 			sql_insert = """
 			INSERT or IGNORE
 			INTO {} VALUES (?,?,?,?,?,?,?,?,?,?);
