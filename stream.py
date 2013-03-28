@@ -16,7 +16,7 @@ class StdOutListener( tweepy.streaming.StreamListener):
 
 			sql_insert = """
 			INSERT or IGNORE
-			INTO {} VALUES (?,?,?,?,?,?,?);
+			INTO {} VALUES (?,?,?,?,?,?,?,?,?,?);
 			""".format( db_name )
 			db.cursor().execute( sql_insert , tweet_match.get_tuple() )
 			db.commit()
@@ -47,6 +47,9 @@ def start_record(db_name):
 		time TEXT,
 		longitude REAL,
 		latitude REAL,
+		country TEXT,
+		state TEXT,
+		state_initial TEXT,
 		PRIMARY KEY (url)
 	);
 	""".format(db_name)
