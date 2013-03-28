@@ -7,7 +7,6 @@ def strip_non_ascii(text):
 	text = str(text)
 	return text
 
-
 # object for every tweet
 class tweet(object):
 
@@ -22,11 +21,19 @@ class tweet(object):
 			self.hashtag_list.append( strip_non_ascii(tag[u'text']).lower() )
 		self.hashtags = self.hashtag_string()
 
+		if json_tweet['coordinates'] is None:
+			self.longitude = None
+			self.latitude = None
+		else:
+			self.longitude = json_tweet['coordinates']['coordinates'][0]
+			self.latitude = json_tweet['coordinates']['coordinates'][1]
+
 		tweet_id = str(json_tweet['id'])	#Unique
 		self.url = str('https://twitter.com/'+self.user+'/status/'+tweet_id)
 
 	def get_tuple(self):
-		return ( self.url, self.user, self.message, self.hashtags, self.time )
+		return ( self.url, self.user, self.message, self.hashtags, self.time,
+			self.longitude, self.latitude )
 
 	def to_string(self):
 		pretty = self.message+'\n'

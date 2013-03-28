@@ -5,7 +5,7 @@ include/
 lib/
 bin/
 build/
-logs/
 TODO.txt
 test.txt
+*.db
 

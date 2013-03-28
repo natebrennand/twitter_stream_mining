@@ -16,7 +16,7 @@ class StdOutListener( tweepy.streaming.StreamListener):
 
 			sql_insert = """
 			INSERT or IGNORE
-			INTO {} VALUES (?,?,?,?,?);
+			INTO {} VALUES (?,?,?,?,?,?,?);
 			""".format( db_name )
 			db.cursor().execute( sql_insert , tweet_match.get_tuple() )
 			db.commit()
@@ -45,6 +45,8 @@ def start_record(db_name):
 		message TEXT,
 		hashtags TEXT,
 		time TEXT,
+		longitude REAL,
+		latitude REAL,
 		PRIMARY KEY (url)
 	);
 	""".format(db_name)
@@ -81,7 +83,6 @@ if __name__ == '__main__':
 		hashtag_filter = hashtag_OR_filter
 
 	db_name = ''
-	print hashtag_queries
 	for tag in sorted(hashtag_queries):
 		db_name += tag + '_'
 	print db_name
