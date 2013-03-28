@@ -7,9 +7,7 @@ import atexit
 import py_tweet
 import sqlite3
 
-
 class StdOutListener( tweepy.streaming.StreamListener):
-
 	def on_data(self, data):
 		tweet_match = py_tweet.tweet(data)
 
@@ -22,7 +20,7 @@ class StdOutListener( tweepy.streaming.StreamListener):
 			""".format( db_name )
 			db.cursor().execute( sql_insert , tweet_match.get_tuple() )
 			db.commit()
-
+		
 		return True
 
 # Requires ONE hashtag to be in the tweet.
@@ -94,8 +92,7 @@ if __name__ == '__main__':
 				+ 'separated by spaces: ')).lower()
 	hashtag_queries = query.split(' ')
 
-	search_type = str(
-		raw_input('Should returned tweets include all or >=1 hashtags? Enter '+
+	search_type = str( raw_input('Should returned tweets include all or >=1 hashtags? Enter '+
 		'"all" or "one"')).lower()
 
 	if 'all' in search_type:
@@ -104,13 +101,11 @@ if __name__ == '__main__':
 		hashtag_filter = hashtag_OR_filter
 
 	db_name = ''
-	for tag in hashtag_queries:
+	print hashtag_queries
+	for tag in sorted(hashtag_queries):
 		db_name += tag + '_'
 	print db_name
 	db = start_record(db_name)
 
 	stream.filter( track = hashtag_queries )
-
-
-
 
