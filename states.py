@@ -11,9 +11,10 @@ FROM
 	sqlite_master 
 WHERE
 	sql NOT NULL;""" )
-table_list = cursor.fetchone()
+table_list = cursor.fetchall()
 
 for table in table_list:
+	table = table[0].encode('ascii','ignore')
 	print '\nTable: ',table
 	sql_query = """
 	SELECT

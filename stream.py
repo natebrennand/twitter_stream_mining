@@ -81,10 +81,10 @@ if __name__ == '__main__':
 
 	if 'all' in search_type:
 		hashtag_filter = hashtag_AND_filter
+		db_name = '_and_'.join(hashtag_queries)
 	else:
 		hashtag_filter = hashtag_OR_filter
-
-	db_name = ('_'+search_type+'_').join(hashtag_queries)
+		db_name = '_or_'.join(hashtag_queries)
 	
 	print db_name
 	db = start_record(db_name)
