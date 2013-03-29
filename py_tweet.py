@@ -14,6 +14,7 @@ def reverse_geoencode(latitude,longitude):
 	r = requests.get('http://api.geonames.org/countrySubdivisionJSON',params=payload)
 	data = json.loads(r.text)
 	
+	# pretty print
 	print json.dumps(data, sort_keys=True,indent=4, separators=(',',': '))
 
 	columns = {u'countryName':None,u'adminCode1':None,u'adminName1':None}
