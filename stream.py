@@ -11,7 +11,7 @@ class StdOutListener( tweepy.streaming.StreamListener):
 	def on_data(self, data):
 		tweet_match = py_tweet.tweet(data)
 
-		if hashtag_filter(tweet_match.hashtag_list):
+		if hashtag_filter(tweet_match.message):
 			print getattr(tweet_match,'time')
 			sql_insert = """
 			INSERT or IGNORE
@@ -23,16 +23,16 @@ class StdOutListener( tweepy.streaming.StreamListener):
 		return True
 
 # Requires ONE hashtag to be in the tweet.
-def hashtag_OR_filter(hashtags):
+def hashtag_OR_filter(message):
 	for query in hashtag_queries:
-		if query in hashtags:
+		if query in message:
 			return True
 	return False
 
 # Requres ALL hashtags to be in the tweet.
-def hashtag_AND_filter(hashtags):
+def hashtag_AND_filter(message):
 	for query in hashtag_queries:
-		if query not in hashtags:
+		if query not in message:
 			return False
 	return True
 
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 	else:
 		hashtag_filter = hashtag_OR_filter
 
-	db_name = ('_'+search_type+'_').join()
+	db_name = ('_'+search_type+'_').join(hashtag_queries)
 	
 	print db_name
 	db = start_record(db_name)

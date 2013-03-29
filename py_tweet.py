@@ -16,12 +16,11 @@ def reverse_geoencode(latitude,longitude):
 	data = json.loads(r.text)
 	
 	# pretty print
-	print json.dumps(data, sort_keys=True,indent=4, separators=(',',': '))
+	#print json.dumps(data, sort_keys=True,indent=4, separators=(',',': '))
 
 	columns = {u'countryName':None,u'adminCode1':None,u'adminName1':None}
 	for key in columns:
 		if not data.get(key) is None:
-			print key
 			columns[key] = data[key].encode('ascii','ignore')
 
 	return columns.values()
@@ -55,7 +54,6 @@ class tweet(object):
 			self.latitude = json_tweet['coordinates']['coordinates'][1]
 			self.country,self.state_initial,self.state = reverse_geoencode(
 				self.latitude,self.longitude)
-			print self.get_tuple()
 
 
 	def get_tuple(self):
