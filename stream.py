@@ -84,9 +84,8 @@ if __name__ == '__main__':
 	else:
 		hashtag_filter = hashtag_OR_filter
 
-	db_name = ''
-	for tag in sorted(hashtag_queries):
-		db_name += tag + '_'
+	db_name = ('_'+search_type+'_').join()
+	
 	print db_name
 	db = start_record(db_name)
 
