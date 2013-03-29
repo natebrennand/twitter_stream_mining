@@ -1,32 +1,36 @@
 
 import sqlite3
-from sys import argv
-
-if len(argv) != 2:
-		print 'usuage\n\tpython',argv[0],'<table_name>'
-		exit(1)
-else:
-	table_name = argv[1]
 
 db = sqlite3.connect( 'logs/data.db' )
 cursor = db.cursor()
 
-sql_query = """
-SELECT
-	state,
-	COUNT(url)
-FROM
-	{}
+cursor.execute( """
+SELECT 
+	name
+FROM 
+	sqlite_master 
 WHERE
-	country is 'United States'
-GROUP BY
-	state
-ORDER BY
-	COUNT(url) desc;
-""".format(table_name)
+	sql NOT NULL;""" )
+table_list = cursor.fetchone()
 
-for row in cursor.execute(sql_query):
-	print row
+for table in table_list:
+	print '\nTable: ',table
+	sql_query = """
+	SELECT
+		COUNT(url),
+		state
+	FROM
+		{}
+	WHERE
+		country is 'United States'
+	GROUP BY
+		state
+	ORDER BY
+		COUNT(url) desc;
+	""".format(table)
+
+	for row in cursor.execute(sql_query):
+		print row[0],'\t',row[1].encode('ascii','ignore')
 
 cursor.close()
 db.close()
