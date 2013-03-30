@@ -38,7 +38,7 @@ for table in table_list:
 	for row in cursor.execute(sql_query):
 		state = row[1].encode('ascii','ignore')
 		relative_frequency = 1.0*row[0]/state_population[state]*1000000
-		print relative_frequency,'\t',state
+		print row[0],'\t',relative_frequency,'\t',state
 
 
 cursor.close()
