@@ -1,8 +1,14 @@
 Twitter Stream Mining
 =====================
 Filters the live stream of tweets. Input the hashtag(s) you're interested in and see what the world is saying with them.
+
 Run stream.py to log tweets into the sqlite database.
+
+	python stream.py
+
 Run states.py to view state by state stats on the geo encoded tweets that you have gathered.
+
+	python states.py
 
 To Run
 =====================
